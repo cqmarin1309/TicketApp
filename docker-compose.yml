@@ -1,0 +1,28 @@
+services:
+  db:
+    image: postgres:13-alpine
+    container_name: ticket_db
+    environment:
+      - POSTGRES_DB=ticketdb
+      - POSTGRES_USER=ticketuser
+      - POSTGRES_PASSWORD=ticketpass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
+
+  web:
+    build: .
+    container_name: ticket_web
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./app:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgres://ticketuser:ticketpass@db:5432/ticketdb
+
+volumes:
+  postgres_data:

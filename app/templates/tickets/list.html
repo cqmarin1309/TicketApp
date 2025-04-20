@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Lista de Tickets</h2>
+<a href="{% url 'create_ticket' %}" class="btn-new">Nuevo Ticket</a>
+
+<table>
+    <thead>
+        <tr>
+            <th>Título</th>
+            <th>Estado</th>
+            <th>Categoría</th>
+            <th>Creado por</th>
+            <th>Asignado a</th>
+            <th>Fecha creación</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody id="tickets-container">
+        {% csrf_token %}
+        <!-- Los tickets se cargarán aquí via AJAX -->
+    </tbody>
+</table>
+{% endblock %}
