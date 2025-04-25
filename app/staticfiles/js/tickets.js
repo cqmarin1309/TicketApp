@@ -143,27 +143,111 @@ async function handleEditClick(e) {
     }
 }
 
+async function loadFormDropdowns() {
+    try {
+        const [categories, users] = await Promise.all([
+            TicketAPI.getCategories(),
+            TicketAPI.getUsers()
+        ]);
+        
+        const categorySelect = document.getElementById('id_category');
+        const userSelect = document.getElementById('id_assigned_to');
+        
+        if (categorySelect) {
+            categories.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat.id;
+                option.textContent = cat.name;
+                categorySelect.appendChild(option);
+            });
+        }
+        
+        if (userSelect) {
+            users.forEach(user => {
+                const option = document.createElement('option');
+                option.value = user.id;
+                option.textContent = user.username;
+                userSelect.appendChild(option);
+            });
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al cargar opciones');
+    }
+}
+
+async function handleFormSubmit(e) {
+    e.preventDefault();
+    
+    const form = e.target;
+    const formData = {
+        title: form.title.value,
+        description: form.description.value,
+        category: form.category.value,
+        assigned_to: form.assigned_to.value
+    };
+    
+    try {
+        const ticket = await TicketAPI.createTicket(formData);
+        alert('Ticket creado exitosamente!');
+        form.reset();
+        loadTickets(); // Actualizar la lista
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al crear ticket: ' + error.message);
+    }
+}
+
 async function handleEditFormSubmit(e) {
     e.preventDefault();
     const form = e.target;
     const ticketId = form.getAttribute('data-id');
     
-    const formData = {
-        title: form.title.value,
-        description: form.description.value,
-        status: form.status.value,
-        assigned_to: form.assigned_to.value || null
-    };
+    // Mostrar estado de carga
+    const submitBtn = form.querySelector('.btn-save');
+    const originalText = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="loading-spinner"></span> Guardando...';
     
     try {
-        const ticket = await TicketAPI.updateTicket(ticketId, formData);
-        alert('Ticket actualizado correctamente');
+        const formData = {
+            title: form.querySelector('[name="title"]').value,
+            description: form.querySelector('[name="description"]').value,
+            status: form.querySelector('[name="status"]').value,
+            assigned_to: form.querySelector('[name="assigned_to"]').value || null
+        };
+        
+        const updatedTicket = await TicketAPI.updateTicket(ticketId, formData);
+        
+        // Mostrar mensaje de éxito
+        showAlert('Ticket actualizado correctamente', 'success');
+        
+        // Ocultar formulario y actualizar lista
         document.getElementById(`edit-form-${ticketId}`).style.display = 'none';
-        loadTickets();  // Refrescar la lista
+        await loadTickets();
+        
     } catch (error) {
-        console.error('Error actualizando ticket:', error);
-        alert('Error al actualizar ticket: ' + error.message);
+        console.error('Error:', error);
+        showAlert(`Error al actualizar ticket: ${error.message}`, 'error');
+    } finally {
+        // Restaurar botón
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
     }
+}
+
+// Función auxiliar para mostrar alertas
+function showAlert(message, type = 'info') {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type}`;
+    alertDiv.textContent = message;
+    
+    document.body.prepend(alertDiv);
+    
+    // Auto-ocultar después de 5 segundos
+    setTimeout(() => {
+        alertDiv.remove();
+    }, 5000);
 }
 
 function handleCancelEdit(e) {
@@ -172,18 +256,40 @@ function handleCancelEdit(e) {
 }
 
 async function handleDeleteClick(e) {
-    if (!confirm('¿Estás seguro de que quieres eliminar este ticket?')) {
+    if (!confirm('¿Estás seguro de eliminar este ticket? Esta acción no se puede deshacer.')) {
         return;
     }
+
+    const button = e.target;
+    const ticketId = button.getAttribute('data-id');
     
-    const ticketId = e.target.getAttribute('data-id');
-    
+    // Mostrar estado de carga
+    const originalText = button.textContent;
+    button.disabled = true;
+    button.innerHTML = '<span class="loading-spinner"></span> Eliminando...';
+
     try {
-        await TicketAPI.deleteTicket(ticketId);
-        alert('Ticket eliminado correctamente');
-        loadTickets();  // Refrescar la lista
+        const success = await TicketAPI.deleteTicket(ticketId);
+        
+        if (success) {
+            showAlert('Ticket eliminado correctamente', 'success');
+            
+            // Opción 1: Eliminar la fila directamente (más rápido)
+            const row = document.querySelector(`.ticket-row[data-ticket-id="${ticketId}"]`);
+            if (row) {
+                row.nextElementSibling?.remove();  // Elimina el formulario de edición si existe
+                row.remove();
+            }
+            
+            // Opción 2: Recargar toda la lista (más consistente)
+            // await loadTickets();
+        }
     } catch (error) {
         console.error('Error eliminando ticket:', error);
-        alert('Error al eliminar ticket: ' + error.message);
+        showAlert(`Error al eliminar ticket: ${error.message}`, 'error');
+    } finally {
+        // Restaurar el botón
+        button.disabled = false;
+        button.textContent = originalText;
     }
 }
