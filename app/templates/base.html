@@ -8,22 +8,69 @@
     <meta name="csrf-token" content="{{ csrf_token }}">
     <title>HelpDesk Rocio</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="/static/css/styles.css">
     
     {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <header>
-        <h1>HelpDesk Rocio</h1>
-        <nav>
-            <a href="{% url 'ticket_list' %}">Inicio</a>
-            <a href="{% url 'create_ticket' %}">Nuevo Ticket</a>
-        </nav>
-    </header>
-    <main>
-        {% block content %}
-        {% endblock %}
-    </main>
+    <div class="layout-container">
+        <!-- Barra lateral -->
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <ul>
+                    <li>
+                        <a href="{% url 'ticket_list' %}" class="active">
+                            <i class="fas fa-home"></i>
+                            <span>Inicio</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'create_ticket' %}">
+                            <i class="fas fa-plus-circle"></i>
+                            <span>Nuevo Ticket</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-ticket-alt"></i>
+                            <span>Mis Tickets</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-cog"></i>
+                            <span>Configuración</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'ticket_list' %}">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Cerrar Sesión</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Contenido principal -->
+        <div class="main-content">
+            <header>
+                <div class="header-content">
+                    <nav>
+                        <span class="welcome-message">
+                            Bienvenido, {{ request.user.username }}
+                        </span>
+                    </nav>
+                </div>
+            </header>
+            
+            <main>
+                {% block content %}
+                {% endblock %}
+            </main>
+        </div>
+    </div>
     
     <script src="/static/js/api.js"></script>
     <script src="/static/js/tickets.js"></script>
