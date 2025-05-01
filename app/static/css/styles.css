@@ -50,8 +50,8 @@
 
 /* Contenido principal */
 .main-content {
-    margin-left: 200px;
-    width: calc(100% - 200px);
+    margin-left: 190px;
+    width: calc(100% - 190px);
 }
 
 .main-content header {
@@ -61,9 +61,9 @@
 /* Header ajustado */
 .header-content {
     display: flex;
-    justify-content: space-between; /* Distribuye el espacio entre elementos */
+    justify-content: flex-end; /* Distribuye el espacio entre elementos */
     align-items: center; /* Centra verticalmente los elementos */
-    padding: 0.5rem;
+    padding: 0.05rem;
     background-color: #ffffff;
     width: 100%; /* Asegura que ocupe todo el ancho disponible */
 }
@@ -171,7 +171,7 @@ main {
 .tickets-bloque {
     background-color: white;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
     padding: 1.5rem;
     margin-top: 1rem;
     overflow-x: auto;  /* Para hacer responsive en móviles */
