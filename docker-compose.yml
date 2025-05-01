@@ -23,6 +23,7 @@ services:
       - db
     environment:
       - DATABASE_URL=postgres://ticketuser:ticketpass@db:5432/ticketdb
+    entrypoint: /entrypoint.sh  # Si usas entrypoint
 
 volumes:
   postgres_data:
