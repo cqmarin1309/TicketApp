@@ -1,5 +1,95 @@
-/* Agrega al final de styles.css */
 /* app/static/css/styles.css */
+
+/* Estructura principal */
+.layout-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Barra lateral */
+.sidebar {
+    width: 190px;
+    background-color: #12171F;
+    color: white;
+    transition: all 0.3s;
+    min-height: 100vh;
+    position: fixed;
+    height: 100%;
+}
+
+.sidebar-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-nav li a {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    color: #ecf0f1;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.sidebar-nav li a:hover {
+    background-color: #34495e;
+}
+
+.sidebar-nav li a.active {
+    background-color: #0056B3;
+    width: inherit;
+}
+
+.sidebar-nav i {
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+}
+
+/* Contenido principal */
+.main-content {
+    margin-left: 190px;
+    width: calc(100% - 190px);
+}
+
+.main-content header {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* Header ajustado */
+.header-content {
+    display: flex;
+    justify-content: flex-end; /* Distribuye el espacio entre elementos */
+    align-items: center; /* Centra verticalmente los elementos */
+    padding: 0.05rem;
+    background-color: #ffffff;
+    width: 100%; /* Asegura que ocupe todo el ancho disponible */
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 70px;
+    }
+    
+    .sidebar-nav span {
+        display: none;
+    }
+    
+    .sidebar-nav i {
+        margin-right: 0;
+        font-size: 1.2rem;
+    }
+    
+    .main-content {
+        margin-left: 70px;
+        width: calc(100% - 70px);
+    }
+}
+
+
 body {
     font-family: 'Montserrat', sans-serif;
     margin: 0;
@@ -9,14 +99,38 @@ body {
 }
 
 
+/* Estilos para el header */
 header {
-    background: #ffffff;
-    color: #210606;
-    padding: 1.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    padding: 1.25rem;
+    background-color: #ffffff;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.logo-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.logo-link h1 {
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+.welcome-message {
+    font-size: 14px;
+    color: #333;
+    margin-left: auto; /* Empuja el mensaje a la derecha */
+    color: #333;
+    padding-right: 1rem; /* Espaciado del borde derecho */
+}
+
+/* Si necesitas alinear mejor los elementos */
+nav {
+    display: flex;
+    align-items: center;
 }
 
 .tickets-cabecera {
@@ -25,15 +139,16 @@ header {
     align-items: center;
 }
 
-header h1 {
-    margin: 0;
-    font-size: 1rem;
+
+.texto-titulo h2 {
+    margin-bottom: 0;
+    margin-top: 0;
+    font-size: 20px
 }
 
-header h2 {
-    /*margin: 0;*/
-    font-weight: 500;
-    font-size: 15px;
+.texto-titulo p {
+    margin-top: 0;
+    font-size: 12px
 }
 
 nav a {
@@ -56,7 +171,7 @@ main {
 .tickets-bloque {
     background-color: white;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
     padding: 1.5rem;
     margin-top: 1rem;
     overflow-x: auto;  /* Para hacer responsive en móviles */
